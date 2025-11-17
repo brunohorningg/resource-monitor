@@ -1,20 +1,50 @@
 # Resource Monitor — Projeto RA3
 
-Projeto de monitoramento de recursos (skeleton). Este repositório contém a estrutura inicial exigida pela atividade RA3 e branches separados para cada componente: resource profiler, namespace analyzer e cgroup manager.
+Projeto de monitoramento de recursos (skeleton).
 
-Compilação mínima:
-
+Build
 ```
 make all
 ```
 
 Binaries serão gerados em `bin/`.
 
-Branches criadas para desenvolvimento (abra PRs a partir delas):
-- `feature/resource-profiler`
-- `feature/namespace-analyzer`
-- `feature/cgroup-manager`
+Componentes e branches
+- `feature/resource-profiler`: coletores de CPU, memória e I/O
+- `feature/namespace-analyzer`: analisador de namespaces
+- `feature/cgroup-manager`: gerenciador de cgroups
 
-Leia `docs/ARCHITECTURE.md` para detalhes da arquitetura.
+Uso rápido
+- Resource profiler (monitor PID a cada 1s):
+```
+bin/resource_profiler --pid 1234 --interval 1
+```
+- Namespace analyzer (listar namespaces de um PID):
+```
+bin/namespace_analyzer 1234
+```
+- Cgroup manager (exemplos; pode precisar de root):
+```
+# criar cgroup (v1 path example)
+bin/cgroup_manager --create /sys/fs/cgroup/memory/mycg
+# set memory
+bin/cgroup_manager --set-mem /sys/fs/cgroup/memory/mycg 200000000
+# add pid
+bin/cgroup_manager --add-pid /sys/fs/cgroup/memory/mycg 1234
+# read metrics
+bin/cgroup_manager --read /sys/fs/cgroup/memory/mycg
+```
 
-Nota: algumas operações (criar cgroups, mover processos) podem requerer privilégios de root.
+Tests
+```
+make tests
+bin/tests/test_cpu
+bin/tests/test_memory
+bin/tests/test_io
+```
+
+PRs
+- Crie uma branch por feature (nome já sugerido acima) e abra um pull request quando pronta.
+
+Observações
+- Algumas operações (criar cgroups, mover processos) podem requerer privilégios de root.
